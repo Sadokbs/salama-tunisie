@@ -1,0 +1,6 @@
+{
+  "name": "Salama Tunisie - Prévention Pluies, Incendies & Inondations",
+  "description": "Plateforme citoyenne et guide de secours pour se prémunir contre les pluies torrentielles, incendies de forêts et inondations dans les 24 gouvernorats de Tunisie.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

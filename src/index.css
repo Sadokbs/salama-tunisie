@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+/* Leaflet Real-World Map Custom Styling */
+.leaflet-container {
+  font-family: inherit;
+  background-color: #020617 !important;
+  z-index: 1;
+}
+
+.custom-weather-tv-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: inline-flex;
+  animation: marquee 30s linear infinite;
+}
