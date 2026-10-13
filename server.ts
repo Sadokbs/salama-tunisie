@@ -15,10 +15,9 @@ const PORT = 3000;
 
 app.use(express.json());
 
-// In-memory citizen reports store
+
 let citizenReports: CitizenAlert[] = [];
 
-// Lazy Gemini AI initialization
 let aiClient: GoogleGenAI | null = null;
 function getGeminiClient(): GoogleGenAI | null {
   if (!aiClient && process.env.GEMINI_API_KEY) {
@@ -34,12 +33,10 @@ function getGeminiClient(): GoogleGenAI | null {
   return aiClient;
 }
 
-// Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', service: 'Salama Tunisie - Emergency Platform' });
 });
 
-// Real-time live weather endpoint for all 24 Tunisian governorates
 app.get('/api/weather/live', async (req, res) => {
   try {
     const liveData = await getLiveTunisiaWeather();
@@ -50,12 +47,10 @@ app.get('/api/weather/live', async (req, res) => {
   }
 });
 
-// Alerts and governorates endpoint
 app.get('/api/governorates', (req, res) => {
   res.json(TUNISIA_GOVERNORATES);
 });
 
-// Citizen alerts endpoint
 app.get('/api/reports', (req, res) => {
   res.json(citizenReports);
 });
@@ -101,7 +96,6 @@ app.post('/api/reports/:id/upvote', (req, res) => {
   res.status(404).json({ error: 'Signalement introuvable.' });
 });
 
-// Gemini AI Emergency Advisor
 app.post('/api/gemini/advisor', async (req, res) => {
   const { question, governorate, hazardContext, lang = 'ar' } = req.body;
 
@@ -112,7 +106,6 @@ app.post('/api/gemini/advisor', async (req, res) => {
   const ai = getGeminiClient();
 
   if (!ai) {
-    // Provide full expert safety guidance when API key is not present
     const expertAdvice = getExpertSafetyResponse(question, lang as 'fr' | 'ar', governorate);
     return res.json({
       answer: expertAdvice,
@@ -138,7 +131,7 @@ Directives de réponse :
 4. Contexte actuel : Gouvernorat: ${governorate || 'Tunisie globale'}, Risque concerné: ${hazardContext || 'Général'}.
 5. Formate ta réponse avec des titres clairs (###), des puces ordonnées et des mots-clés en gras.`;
 
-  // Try generating content with primary model, then fallback model
+
   try {
     let response;
     try {
@@ -170,7 +163,6 @@ Directives de réponse :
     }
   } catch (error) {
     console.error('Error generating Gemini response, using expert knowledge base:', error);
-    // Never send an empty error or a cold 1-liner to a citizen asking for safety help
     const expertSafetyAdvice = getExpertSafetyResponse(question, lang as 'fr' | 'ar', governorate);
     return res.json({ 
       answer: expertSafetyAdvice,
@@ -180,7 +172,6 @@ Directives de réponse :
 });
 
 async function startServer() {
-  // Vite middleware for development
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
       server: { middlewareMode: true },
